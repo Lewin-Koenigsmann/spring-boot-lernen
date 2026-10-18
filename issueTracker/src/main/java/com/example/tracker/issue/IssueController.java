@@ -18,53 +18,46 @@ import com.example.tracker.comment.CreateCommentRequest;
 
 import jakarta.validation.Valid;
 
-@RestController 
-@RequestMapping ("/api/issues")
+@RestController
+@RequestMapping("/api/issues")
 public class IssueController {
 
     private final IssueService issueService;
 
-    public IssueController(IssueService issueService)
-    {
+    public IssueController(IssueService issueService) {
         this.issueService = issueService;
     }
 
-    @PostMapping 
-    public ResponseEntity<IssueResponse> createIssue(@Valid @RequestBody CreateIssueRequest request)
-    {
+    @PostMapping
+    public ResponseEntity<IssueResponse> createIssue(@Valid @RequestBody CreateIssueRequest request) {
         IssueResponse issueResponse = issueService.createIssue(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(issueResponse);
     }
 
-    @GetMapping ("/{id}")
-    public IssueResponse getIssue(@PathVariable Long id)
-    {
+    @GetMapping("/{id}")
+    public IssueResponse getIssue(@PathVariable Long id) {
         return issueService.getIssueById(id);
     }
 
-    @GetMapping 
-    public List<IssueResponse> getIssuesByStatus(@RequestParam IssueStatus status)
-    {
+    @GetMapping
+    public List<IssueResponse> getIssuesByStatus(@RequestParam IssueStatus status) {
         return issueService.getIssuesByStatus(status);
     }
 
-    @PatchMapping ("/{id}/status")
-    public IssueResponse updateIssueStatus(@PathVariable Long id, @RequestParam("status") IssueStatus newStatus)
-    {
+    @PatchMapping("/{id}/status")
+    public IssueResponse updateIssueStatus(@PathVariable Long id, @RequestParam("status") IssueStatus newStatus) {
         return issueService.updateStatus(id, newStatus);
     }
 
-    @PostMapping ("/{issueId}/comments")
-    public ResponseEntity<CommentResponse> createComment(@Valid @RequestBody CreateCommentRequest request, 
-        @PathVariable Long issueId)
-    {
+    @PostMapping("/{issueId}/comments")
+    public ResponseEntity<CommentResponse> createComment(@Valid @RequestBody CreateCommentRequest request,
+            @PathVariable Long issueId) {
         CommentResponse response = issueService.addComment(issueId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping ("/{issueId}/comments")
-    public List<CommentResponse> getCommentsForIssue(@PathVariable Long issueId)
-    {
+    @GetMapping("/{issueId}/comments")
+    public List<CommentResponse> getCommentsForIssue(@PathVariable Long issueId) {
         return issueService.getCommentsForIssue(issueId);
     }
 }
