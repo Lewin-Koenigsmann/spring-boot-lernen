@@ -10,20 +10,21 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.tracker.comment.CommentRepository;
 
-@ExtendWith (MockitoExtension.class)
+// Reiner Unit-Test ohne Spring-Container für maximale Geschwindigkeit.
+// @Mock erzeugt Attrappen, @InjectMocks übergibt sie in den Konstruktor.
+@ExtendWith(MockitoExtension.class)
 class IssueServiceTest {
-    @Mock 
+    @Mock
     private IssueRepository issueRepository;
 
     @Mock
     private CommentRepository commentRepository;
 
-    @InjectMocks 
+    @InjectMocks
     private IssueService issueService;
 
-    @Test 
-    void shouldThrowExceptionWhenTitleAlreadyExists()
-    {
+    @Test
+    void shouldThrowExceptionWhenTitleAlreadyExists() {
         CreateIssueRequest request = new CreateIssueRequest("Bug 1", "Test Beschreibung");
         Mockito.when(issueRepository.existsByTitle("Bug 1")).thenReturn(true);
 
@@ -33,8 +34,7 @@ class IssueServiceTest {
     }
 
     @Test
-    void shouldCreateIssueSuccessfully()
-    {
+    void shouldCreateIssueSuccessfully() {
         CreateIssueRequest request = new CreateIssueRequest("Bug 2", "Test Beschreibung");
         Mockito.when(issueRepository.existsByTitle("Bug 2")).thenReturn(false);
 

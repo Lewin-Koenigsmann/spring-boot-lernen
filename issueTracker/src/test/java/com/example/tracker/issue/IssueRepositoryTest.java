@@ -7,17 +7,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 
-@DataJpaTest 
+// Slice-Test: Startet nur die JPA-Schicht und H2, nicht den ganzen Server.
+// Macht nach jedem Test automatisch einen Rollback für saubere Testdaten.
+@DataJpaTest
 class IssueRepositoryTest {
-    
-    @Autowired 
+
+    @Autowired
     private IssueRepository issueRepository;
 
-    @Test 
-    void shouldFindIssuesByTitleIgnoreCase()
-    {
+    @Test
+    void shouldFindIssuesByTitleIgnoreCase() {
         issueRepository.save(new Issue("Login Button kaputt", "Der Login Button funktioniert nicht mehr " +
-        "seit Update."));
+                "seit Update."));
 
         issueRepository.save(new Issue("Datenbank Fehler", "Fehler in der Datenbank"));
 
