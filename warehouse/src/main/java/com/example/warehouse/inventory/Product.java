@@ -10,30 +10,35 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 
-@Entity 
-@Table (name = "products")
+@Entity
+@Table(name = "products")
 public class Product {
 
-    @Id 
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column (nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String sku;
 
-    @Column (nullable = false, length = 150)
+    @Column(nullable = false, length = 150)
     private String name;
 
-    @Column (nullable = false)
+    // Niemals double/float für Geldbeträge nutzen (Rundungsfehler im Binärsystem).
+    // BigDecimal garantiert exakte kaufmännische Dezimalberechnungen.
+    @Column(nullable = false)
     private BigDecimal price;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private int stock;
 
-    @Version 
+    // Optimistic Locking: Schützt vor dem Lost-Update-Problem bei zeitgleichen
+    // Käufen, ohne langsame Datenbank-Locks zu verwenden.
+    @Version
     private Long version;
 
-    Product(){}
+    Product() {
+    }
 
     public Product(String sku, String name, BigDecimal price, int stock) {
         this.sku = sku;
@@ -42,8 +47,9 @@ public class Product {
         this.stock = stock;
     }
 
-    public void reduceStock(int quantity)
-    {
+    // Rich Domain Model: Geschäftslogik liegt direkt in der Entity. Wirft
+    // IllegalStateException, wenn der aktuelle Objektzustand den Kauf verbietet.
+    public void reduceStock(int quantity) {
         if (quantity <= 0)
             throw new IllegalArgumentException();
         else if (this.stock < quantity)
@@ -76,5 +82,4 @@ public class Product {
         return version;
     }
 
-    
 }

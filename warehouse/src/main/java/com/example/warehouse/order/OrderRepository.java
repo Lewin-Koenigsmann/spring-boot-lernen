@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OrderRepository extends JpaRepository<Order, Long>{
+public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    @EntityGraph (attributePaths = "items")
+    // Löst das N+1 Select Problem: Lädt Bestellungen und ihre Positionen in
+    // einer einzigen SQL-Abfrage per LEFT JOIN statt in N Einzelabfragen.
+    @EntityGraph(attributePaths = "items")
     List<Order> findByCustomerEmail(String customerEmail);
 }

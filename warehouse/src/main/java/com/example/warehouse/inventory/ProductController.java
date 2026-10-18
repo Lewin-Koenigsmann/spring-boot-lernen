@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping ("/api/products")
+@RequestMapping("/api/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -23,23 +23,20 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping 
-    public ResponseEntity<ProductResponse> createProduct (@Valid @RequestBody CreateProductRequest request)
-    {
+    @PostMapping
+    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody CreateProductRequest request) {
         ProductResponse response = productService.createProduct(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping ("/{sku}")
-    public ProductResponse getProductBySku(@PathVariable String sku)
-    {
+    @GetMapping("/{sku}")
+    public ProductResponse getProductBySku(@PathVariable String sku) {
         return productService.getProductBySku(sku);
     }
 
-    @PatchMapping ("/{sku}/reduce-stock")
-    public ProductResponse reduceStock(@PathVariable String sku, @RequestParam int quantity)
-    {
+    @PatchMapping("/{sku}/reduce-stock")
+    public ProductResponse reduceStock(@PathVariable String sku, @RequestParam int quantity) {
         return productService.reduceStock(sku, quantity);
     }
 }

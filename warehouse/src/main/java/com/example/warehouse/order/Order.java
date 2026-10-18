@@ -16,28 +16,30 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-@Entity 
-@Table (name = "orders")
+@Entity
+@Table(name = "orders")
 public class Order {
 
-    @Id 
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private String customerEmail;
 
-    @Enumerated (EnumType.STRING)
-    @Column (nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private OrderStatus status;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private BigDecimal totalPrice;
 
-    @Column (nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @OneToMany (mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    // Aggregate Root: CascadeType.ALL speichert und löscht OrderItems automatisch
+    // mit der Order. Ein eigenes OrderItemRepository ist dadurch überflüssig.
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
     protected Order() {
@@ -51,8 +53,9 @@ public class Order {
         this.createdAt = LocalDateTime.now();
     }
 
-    public void addItem(OrderItem item)
-    {
+    // Wichtig bei bidirektionalen Beziehungen: Beide Seiten im Java-Code
+    // synchronisieren (item.setOrder(this)), sonst fehlt der Fremdschlüssel.
+    public void addItem(OrderItem item) {
         this.items.add(item);
         item.setOrder(this);
 
@@ -84,5 +87,4 @@ public class Order {
         return items;
     }
 
-    
 }

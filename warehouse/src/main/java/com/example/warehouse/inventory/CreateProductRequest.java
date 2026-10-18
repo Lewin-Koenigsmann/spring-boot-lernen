@@ -9,19 +9,12 @@ import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
 public record CreateProductRequest(
-    @NotBlank 
-    String sku,
+        @NotBlank String sku,
 
-    @NotBlank 
-    @Size (max = 150)
-    String name,
+        @NotBlank @Size(max = 150) String name,
 
-    @NotNull 
-    @Positive 
-    BigDecimal price,
+        @NotNull @Positive BigDecimal price,
 
-    @PositiveOrZero 
-    int stock
-) {
+        @PositiveOrZero int stock) {
 
 }
